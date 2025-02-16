@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "jobs-candidates-api"
+version = "0.1.0"
+description = ""
+authors = ["Roman Vlasenko <klavionik@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.8"
+elasticsearch = {extras = ["async"], version = "^8.17.1"}
+uvicorn = "^0.34.0"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.15.0"
+
+[tool.mypy]
+strict = true
+plugins = [
+  "pydantic.mypy"
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
