@@ -23,3 +23,13 @@ repos:
         types: [python]
         require_serial: true
         exclude: "^seed_image"
+
+  - repo: https://github.com/python-poetry/poetry
+    rev: '1.8.5'
+    hooks:
+      - id: poetry-export
+        stages: [pre-commit]
+        name: poetry-export-app
+        args:
+          - --output=app/requirements.txt
+          - --only=main

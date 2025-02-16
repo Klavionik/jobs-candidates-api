@@ -1,4 +1,23 @@
 services:
+  api:
+    build:
+      context: ./app
+    command: ["uvicorn", "--host", "0.0.0.0", "--reload", "--factory", "app.main:create_app"]
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "8005:8000"
+    volumes:
+      - ./app:/code/app
+    healthcheck:
+      test: curl localhost:8000/healthz || exit 1
+      timeout: 2s
+      interval: 3s
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.17.0
     ports:

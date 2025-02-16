@@ -1,18 +1,10 @@
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.exceptions import NotFoundError
 from app.es_lib.exceptions import EntityNotFoundError
-from typing import Generic, TypeVar, Any, Optional, cast
-from pydantic import BaseModel
-
-Entity = TypeVar("Entity")
+from typing import Any, Optional, cast
 
 
-class Hit(BaseModel, Generic[Entity]):
-    entity: Entity
-    relevance_score: float
-
-
-class ElasticsearchClient(Generic[Entity]):
+class ElasticsearchClient:
     """
     Class containing methods for retrieving jobs or candidates from the
     respective Elasticsearch index by ID as well as sending queries.
@@ -26,7 +18,7 @@ class ElasticsearchClient(Generic[Entity]):
         self,
         *,
         id: int,
-    ) -> Entity:
+    ) -> dict[str, Any]:
         """
         Returns the document corresponding to the given document ID as dictionary.
 
@@ -41,29 +33,22 @@ class ElasticsearchClient(Generic[Entity]):
         """
 
         try:
-            document = await self._client.get_source(
-                index=self.index, id=str(id), source=True
-            )
+            doc = await self._client.get_source(index=self.index, id=str(id))
+            return cast(dict[str, Any], doc)
         except NotFoundError as error:
             msg = f"Entity {self.index} with ID {id} was not found."
             raise EntityNotFoundError(msg) from error
 
-        # TODO: An adapter function.
-        entity = cast(Entity, document)
-        return entity
-
     async def search(
         self, query: dict[str, Any], return_source: bool = False
-    ) -> list[Hit[Entity]]:
+    ) -> dict[str, Any]:
         """
         Executes a query on the index.
         """
-        result = await self._client.search(
+        hits = await self._client.search(
             body=query, index=self.index, source=return_source
         )
-
-        # TODO: An adapter function.
-        return cast(list[Hit[Entity]], result)
+        return hits  # type: ignore[return-value]
 
     async def search_with_bool_queries(
         self,
@@ -71,7 +56,7 @@ class ElasticsearchClient(Generic[Entity]):
         should_queries: Optional[list[dict[str, Any]]] = None,
         must_queries: Optional[list[dict[str, Any]]] = None,
         return_source: bool = False,
-    ) -> list[Hit[Entity]]:
+    ) -> dict[str, Any]:
         """
         Builds a boolean query comprising the provided should and must sub queries.
 
@@ -91,5 +76,7 @@ class ElasticsearchClient(Generic[Entity]):
                 "bool": {"must": must_queries or [], "should": should_queries or []}
             }
         }
-        result = await self.search(query=query, return_source=return_source)
-        return result
+        return await self.search(query=query, return_source=return_source)
+
+    async def close(self) -> None:
+        await self._client.close()
