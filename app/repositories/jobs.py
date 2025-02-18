@@ -1,11 +1,23 @@
 import abc
-from app.common.entities import Job
+from typing import Any
+
+from app.common.entities import Job, Candidate, Hit
 from app.es_lib import ElasticsearchClient
 
 
 class JobsRepository(abc.ABC):
     @abc.abstractmethod
     async def get_by_id(self, candidate_id: int) -> Job:
+        pass
+
+    @abc.abstractmethod
+    async def search_by_candidate(
+        self,
+        candidate: Candidate,
+        salary_match: bool,
+        top_skill_match: bool,
+        seniority_match: bool,
+    ) -> list[Hit]:
         pass
 
 
@@ -16,3 +28,38 @@ class ESJobsRepository(JobsRepository):
     async def get_by_id(self, job_id: int) -> Job:
         document = await self._es_client.get_entity(id=job_id)
         return Job(id=job_id, **document)
+
+    async def search_by_candidate(
+        self,
+        candidate: Candidate,
+        salary_match: bool,
+        top_skills_match: bool,
+        seniority_match: bool,
+    ) -> list[Hit]:
+        query: list[dict[str, Any]] = []
+
+        if salary_match:
+            query.append(
+                {"range": {"max_salary": {"gte": candidate.salary_expectation}}}
+            )
+
+        if top_skills_match:
+            query.append(
+                {
+                    "terms_set": {
+                        "top_skills": {
+                            "terms": candidate.top_skills,
+                            "minimum_should_match": min(len(candidate.top_skills), 2),
+                        }
+                    }
+                }
+            )
+
+        if seniority_match:
+            query.append({"term": {"seniority": {"value": candidate.seniority}}})
+
+        docs = await self._es_client.search_with_bool_queries(must_queries=query)
+        return [
+            Hit(entity_id=hit["_id"], relevance_score=hit["_score"])
+            for hit in docs["hits"]["hits"]
+        ]

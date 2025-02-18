@@ -46,7 +46,10 @@ class ElasticsearchClient:
         Executes a query on the index.
         """
         hits = await self._client.search(
-            body=query, index=self.index, source=return_source
+            body=query,
+            index=self.index,
+            source=return_source,
+            sort="_score",
         )
         return hits  # type: ignore[return-value]
 

@@ -15,3 +15,8 @@ class Candidate(BaseModel):
     top_skills: list[str]
     other_skills: list[str]
     seniority: str
+
+
+class Hit(BaseModel):
+    entity_id: int
+    relevance_score: float
