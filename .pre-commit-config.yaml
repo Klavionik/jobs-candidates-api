@@ -32,4 +32,4 @@ repos:
         name: poetry-export-app
         args:
           - --output=requirements.txt
-          - --only=main
+          - --with=dev

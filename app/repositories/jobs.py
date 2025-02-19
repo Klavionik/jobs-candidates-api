@@ -60,7 +60,7 @@ class ESJobsRepository(JobsRepository):
             )
 
         if seniority_match:
-            query.append({"term": {"seniority": {"value": candidate.seniority}}})
+            query.append({"term": {"seniorities": {"value": candidate.seniority}}})
 
         docs = await self._es_client.search_with_bool_queries(must_queries=query)
         return [
