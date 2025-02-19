@@ -1,3 +1,15 @@
+# Candidates/Jobs API
+Implementation of a simple Candidates/Jobs API for Instaffo. See the task description 
+below.
+
+## How to run
+1. Clone the repository.
+2. Run `$ docker compose up --wait` to start services and seed the database with mock 
+   data.
+3. As soon as all services are up and healthy, visit `http://localhost:8005/docs` in your 
+   browser to see the OpenAPI docs and try out the API. 
+4. You can use `$ docker compose run --rm api pytest -v` to run the test suite. 
+
 # Intro
 
 For your next step in the application process at Instaffo we'd like you to do the task given below to be able to further assess your skills and knowledge. 

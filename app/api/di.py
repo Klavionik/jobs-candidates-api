@@ -20,13 +20,19 @@ async def get_jobs_repository(
     config: Annotated[Config, Depends(get_config)],
 ) -> AsyncIterator[JobsRepository]:
     es_client = ElasticsearchClient(config.es_url, index="jobs")
-    yield ESJobsRepository(es_client)
-    await es_client.close()
+
+    try:
+        yield ESJobsRepository(es_client)
+    finally:
+        await es_client.close()
 
 
 async def get_candidates_repository(
     config: Annotated[Config, Depends(get_config)],
 ) -> AsyncIterator[CandidatesRepository]:
     es_client = ElasticsearchClient(config.es_url, index="candidates")
-    yield ESCandidatesRepository(es_client)
-    await es_client.close()
+
+    try:
+        yield ESCandidatesRepository(es_client)
+    finally:
+        await es_client.close()
