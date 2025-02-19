@@ -1,0 +1,21 @@
+Name                                  Stmts   Miss  Cover
+---------------------------------------------------------
+app/__init__.py                           0      0   100%
+app/api/__init__.py                       0      0   100%
+app/api/di.py                            18      0   100%
+app/api/routes.py                        38      0   100%
+app/common/__init__.py                    0      0   100%
+app/common/config.py                      3      0   100%
+app/common/entities.py                   16      0   100%
+app/es_lib/__init__.py                    2      0   100%
+app/es_lib/elastic_search_client.py      25      1    96%
+app/es_lib/exceptions.py                  1      0   100%
+app/main.py                               9      0   100%
+app/repositories/__init__.py              2      0   100%
+app/repositories/candidates.py           30      2    93%
+app/repositories/jobs.py                 30      2    93%
+tests/__init__.py                         0      0   100%
+tests/conftest.py                         8      0   100%
+tests/test_api.py                        42      0   100%
+---------------------------------------------------------
+TOTAL                                   224      5    98%

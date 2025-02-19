@@ -10,6 +10,8 @@ below.
    browser to see the OpenAPI docs and try out the API. 
 4. You can use `$ docker compose run --rm api pytest -v` to run the test suite. 
 
+See `covreport.txt` for the test coverage report. 
+
 
 ## The solution
 To put it shortly, in the REST world we are expected to expose our resources via API 
