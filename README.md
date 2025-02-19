@@ -3,7 +3,7 @@ Implementation of a simple Candidates/Jobs API for Instaffo. See the task descri
 below.
 
 ## How to run
-1. Clone the repository.
+1. Clone the repository and `cd` into the project folder.
 2. Run `$ docker compose up --wait` to start services and populate the database with mock 
    data.
 3. As soon as all services are up and healthy, visit `http://localhost:8005/docs` in your 
