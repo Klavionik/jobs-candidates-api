@@ -46,12 +46,12 @@ class ElasticsearchClient:
         Executes a query on the index.
         """
         hits = await self._client.search(
-            body=query,
+            query=query,
             index=self.index,
             source=return_source,
             sort="_score",
         )
-        return hits  # type: ignore[return-value]
+        return cast(dict[str, Any], hits)
 
     async def search_with_bool_queries(
         self,
@@ -74,11 +74,7 @@ class ElasticsearchClient:
         if not (should_queries or must_queries):
             raise ValueError("Either should_queries or must_queries must be set.")
 
-        query = {
-            "query": {
-                "bool": {"must": must_queries or [], "should": should_queries or []}
-            }
-        }
+        query = {"bool": {"must": must_queries or [], "should": should_queries or []}}
         return await self.search(query=query, return_source=return_source)
 
     async def close(self) -> None:

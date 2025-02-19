@@ -11,7 +11,7 @@ services:
     ports:
       - "8005:8000"
     volumes:
-      - ./app:/code/app
+      - ./:/code
     healthcheck:
       test: curl localhost:8000/healthz || exit 1
       timeout: 2s
