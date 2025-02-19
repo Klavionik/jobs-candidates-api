@@ -23,7 +23,7 @@ So here we have 4 endpoints: two for the Job resource and two for the Candidate 
 One of each pair simply responds with an entity object and another allows for a filtered
 search of a corresponding subresource (where "jobs" is a subresource of a candidate 
 and "candidates" is a subresource of a job). Scoping information (like the ID of an 
-entity to fetch or filters) is received via path and query parameters, contributing 
+entity to fetch or the filters) is received via path and query parameters, contributing 
 to the addressability of the API.
 
 Code-wise, everything is pretty simple. Route handlers should not be responsible for 
@@ -43,7 +43,7 @@ of the codebase, saving me from a ton of bugs (especially during a big refactori
 was no such requirement, but I made it mandatory to use at least one of the available 
 filters (I guess it just makes sense).
 
-What would I improve, if I had to develop this API further:
+What I would improve if I had to develop this API further:
 1. Obviously, there's a need for pagination for the search endpoints.
 2. We probably should create one ES client at the startup and not on every request, so 
 that we can make use of the HTTP connections pool.
