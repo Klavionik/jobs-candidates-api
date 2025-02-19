@@ -1,7 +1,6 @@
 services:
   api:
-    build:
-      context: ./app
+    build: .
     command: ["uvicorn", "--host", "0.0.0.0", "--reload", "--factory", "app.main:create_app"]
     env_file:
       - path: .env

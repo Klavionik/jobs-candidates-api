@@ -31,5 +31,5 @@ repos:
         stages: [pre-commit]
         name: poetry-export-app
         args:
-          - --output=app/requirements.txt
+          - --output=requirements.txt
           - --only=main
