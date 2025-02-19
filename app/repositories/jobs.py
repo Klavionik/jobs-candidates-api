@@ -7,7 +7,7 @@ from app.es_lib import ElasticsearchClient
 
 class JobsRepository(abc.ABC):
     @abc.abstractmethod
-    async def get_by_id(self, candidate_id: int) -> Job:
+    async def get_by_id(self, job_id: int) -> Job:
         pass
 
     @abc.abstractmethod
