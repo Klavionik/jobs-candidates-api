@@ -4,7 +4,7 @@ below.
 
 ## How to run
 1. Clone the repository.
-2. Run `$ docker compose up --wait` to start services and seed the database with mock 
+2. Run `$ docker compose up --wait` to start services and populate the database with mock 
    data.
 3. As soon as all services are up and healthy, visit `http://localhost:8005/docs` in your 
    browser to see the OpenAPI docs and try out the API. 
