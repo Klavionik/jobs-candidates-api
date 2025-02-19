@@ -50,6 +50,15 @@ async def search_jobs_by_candidate(
     top_skills_match: bool = False,
     seniority_match: bool = False,
 ) -> list[Hit]:
+    filter_provided = any((salary_match, top_skills_match, seniority_match))
+
+    if not filter_provided:
+        raise HTTPException(
+            status_code=400,
+            detail="You must provide at least one of these three filters: "
+            "salary_match, top_skills_match, seniority_match.",
+        )
+
     candidate = await candidates_repository.get_by_id(candidate_id)
 
     if candidate is None:
@@ -74,6 +83,15 @@ async def search_candidates_by_job(
     top_skills_match: bool = False,
     seniority_match: bool = False,
 ) -> list[Hit]:
+    filter_provided = any((salary_match, top_skills_match, seniority_match))
+
+    if not filter_provided:
+        raise HTTPException(
+            status_code=400,
+            detail="You must provide at least one of these three filters: "
+            "salary_match, top_skills_match, seniority_match.",
+        )
+
     job = await jobs_repository.get_by_id(job_id)
 
     if job is None:
