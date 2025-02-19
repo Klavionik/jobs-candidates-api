@@ -2,12 +2,12 @@ import abc
 from typing import Any
 
 from app.common.entities import Job, Candidate, Hit
-from app.es_lib import ElasticsearchClient
+from app.es_lib import ElasticsearchClient, EntityNotFoundError
 
 
 class JobsRepository(abc.ABC):
     @abc.abstractmethod
-    async def get_by_id(self, job_id: int) -> Job:
+    async def get_by_id(self, job_id: int) -> Job | None:
         pass
 
     @abc.abstractmethod
@@ -25,8 +25,12 @@ class ESJobsRepository(JobsRepository):
     def __init__(self, es_client: ElasticsearchClient):
         self._es_client = es_client
 
-    async def get_by_id(self, job_id: int) -> Job:
-        document = await self._es_client.get_entity(id=job_id)
+    async def get_by_id(self, job_id: int) -> Job | None:
+        try:
+            document = await self._es_client.get_entity(id=job_id)
+        except EntityNotFoundError:
+            return None
+
         return Job(id=job_id, **document)
 
     async def search_by_candidate(

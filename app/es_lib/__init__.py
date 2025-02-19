@@ -1,1 +1,2 @@
 from app.es_lib.elastic_search_client import ElasticsearchClient as ElasticsearchClient
+from app.es_lib.exceptions import EntityNotFoundError as EntityNotFoundError
