@@ -10,7 +10,7 @@ from app.repositories import JobsRepository, CandidatesRepository
 router = APIRouter(prefix="/api/v1")
 
 
-@router.get("/candidates/{candidate_id}")
+@router.get("/candidates/{candidate_id}", summary="Get a Candidate by its ID.")
 async def get_candidate(
     candidate_id: int,
     repository: Annotated[CandidatesRepository, Depends(get_candidates_repository)],
@@ -25,7 +25,7 @@ async def get_candidate(
     return candidate
 
 
-@router.get("/jobs/{job_id}")
+@router.get("/jobs/{job_id}", summary="Get a Job by its ID.")
 async def get_job(
     job_id: int, repository: Annotated[JobsRepository, Depends(get_jobs_repository)]
 ) -> Job:
@@ -39,7 +39,10 @@ async def get_job(
     return job
 
 
-@router.get("/candidates/{candidate_id}/jobs")
+@router.get(
+    "/candidates/{candidate_id}/jobs",
+    summary="Search jobs for a Candidate with the given ID.",
+)
 async def search_jobs_by_candidate(
     candidate_id: int,
     candidates_repository: Annotated[
@@ -72,7 +75,10 @@ async def search_jobs_by_candidate(
     return jobs
 
 
-@router.get("/jobs/{job_id}/candidates")
+@router.get(
+    "/jobs/{job_id}/candidates",
+    summary="Search candidates for a Job with the given ID.",
+)
 async def search_candidates_by_job(
     job_id: int,
     jobs_repository: Annotated[JobsRepository, Depends(get_jobs_repository)],
