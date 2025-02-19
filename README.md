@@ -10,6 +10,42 @@ below.
    browser to see the OpenAPI docs and try out the API. 
 4. You can use `$ docker compose run --rm api pytest -v` to run the test suite. 
 
+
+## The solution
+To put it shortly, in the REST world we are expected to expose our resources via API 
+endpoints for clients to perform HTTP requests on them. What you call a resource is up to 
+you and depends on the scope of the problem, but in our case I believe that Jobs and 
+Candidates are resources.
+
+So here we have 4 endpoints: two for the Job resource and two for the Candidate resource.
+One of each pair simply responds with an entity object and another allows for a filtered
+search of a corresponding subresource (where "jobs" is a subresource of a candidate 
+and "candidates" is a subresource of a job). Scoping information (like the ID of an 
+entity to fetch or filters) is received via path and query parameters, contributing 
+to the addressability of the API.
+
+Code-wise, everything is pretty simple. Route handlers should not be responsible for 
+anything, except for all things HTTP, like validating the request and sending the 
+response. There is no business logic in this project, I would say, only some data access 
+logic, which is encapsulated in repositories. So the route handlers in `app.api.routes` 
+simply validate the incoming parameters, pass them down to repositories, and respond 
+to clients with some data that has been retrieved via repositories. The repositories in 
+`app.repositories` handle all the gritty stuff, issuing correct queries to the database 
+and returning entities from `app.common.entities`, basically serving as a container of 
+entities of a given type. 
+
+I've introduced some small changes to the provided ElasticSearch boilerplate client and 
+made it async. I also prefer to strictly typehint my code these days. It makes the 
+development a bit slower and sometimes tricky, but allows for a much greater control 
+of the codebase, saving me from a ton of bugs (especially during a big refactoring). There 
+was no such requirement, but I made it mandatory to use at least one of the available 
+filters (I guess it just makes sense).
+
+What would I improve, if I had to develop this API further:
+1. Obviously, there's a need for pagination for the search endpoints.
+2. We probably should create one ES client at the startup and not on every request, so 
+that we can make use of the HTTP connections pool.
+
 # Intro
 
 For your next step in the application process at Instaffo we'd like you to do the task given below to be able to further assess your skills and knowledge. 
